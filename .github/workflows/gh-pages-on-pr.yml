@@ -1,13 +1,13 @@
-name: Deploy to GitHub-Pages
+name: Deploy on pull request
 
 on:
-  push:
+  pull_request_target:
     branches:
-      - master
+      - '*'
 
 jobs:
-  deploy:
-    name: Deploy
+  deploy-on-pull-request:
+    name: Deploy on Pull Request
 
     permissions:
       contents: write
@@ -15,31 +15,33 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+
       - name: Checkout
         uses: actions/checkout@v4
+        with:
+          ref: 'refs/pull/${{ github.event.pull_request.number }}/merge'
 
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
-          node-version-file: 'package.json'  # оставляем твою версию Node
+          node-version-file: 'package.json'
 
       - name: Restore cache
         uses: actions/cache@v3
         with:
           path: ~/.npm
-          key: cache-npm-${{ hashFiles('package-lock.json') }}
+          key: cache-npm-${{ hashFiles('./package-lock.json') }}
           restore-keys: cache-npm-
 
       - name: Install dependencies
         run: npm ci
 
       - name: Build project
-        run: npm run build   # gulp build через скрипт package.json
+        run: npm run build
 
       - name: Deploy
         uses: JamesIves/github-pages-deploy-action@v4
         with:
-          branch: gh-pages      # ветка для деплоя
-          folder: build         # папка с готовым билдом
-          clean: true           # очищает ветку перед деплоем
-          commit-message: "Deploy from Actions [skip ci]"
+          folder: ./build
+          branch: gh-pages
+          target-folder: ${{ github.event.pull_request.number }}
