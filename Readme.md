@@ -1,7 +1,7 @@
 # Личный проект «Кэт энерджи»
 
 * Студент: [Елена Покровская](https://up.htmlacademy.ru/adaptive-individual/2/user/855585).
-* Наставник: `Неизвестно`.
+* Наставник: [Елена Покровская](https://up.htmlacademy.ru/adaptive-individual/2/user/855585).
 
 ---
 
